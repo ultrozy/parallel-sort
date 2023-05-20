@@ -1,0 +1,32 @@
+#!/bin/bash
+#SBATCH --job-name=student
+#SBATCH --partition normal
+#SBATCH --reservation=students
+#SBATCH --nodes=1 --ntasks-per-node=40
+#SBATCH --time=03:00:00
+#SBATCH --chdir=.
+
+rm -f res_omp.txt
+for p in 1 2 3 4 6 8 10 12 16 20 24 30 36 40 ; do
+  export OMP_NUM_THREADS=$p
+  ./test_omp >> res_omp.txt
+  echo >> res_omp.txt
+done
+
+rm -f res_mpi.txt
+for p in 1 2 3 4 6 8 10 12 16 20 24 30 36 40 ; do
+  mpirun -np $p ./test_mpi >> res_mpi.txt
+  echo >> res_mpi.txt
+done
+
+rm -f res_mix.txt
+## Here: p - number of MPI processes ; t - number of OMP threads ; pt=p*t
+pt=$SLURM_NTASKS
+for p in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 ; do
+  t=$(($pt / $p))
+  if [[ $pt == $(($p * $t)) ]] ; then
+    export OMP_NUM_THREADS=$t
+    mpirun -np $p ./test_mix >> res_mix.txt
+    echo >> res_mix.txt
+  fi
+done
