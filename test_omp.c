@@ -14,9 +14,9 @@
 #define ITERATIONS_PER_SIZE 10
 #define MIN_SIZE 10
 #define MID_SIZE 10
-// #define MAX_SIZE 100000000
-#define MAX_SIZE 100
-#define MULTIPLIER 1.5
+#define MAX_SIZE 100000000
+// #define MAX_SIZE 100
+#define MULTIPLIER 1.3
 
 #define SWAP(type, temp, x, y) type(temp) = (x); (x) = (y); (y) = (temp)
 
@@ -97,8 +97,8 @@ int main() {
     }
 
     // PRINT RESULT FOR SIZE
-    printf("OMP MergeSort: N=%d num_proc=%d max_th=%d time=%lf +- %lf\n", n, omp_get_num_procs(),
-         omp_get_max_threads(), average, variance);
+    printf("OMP MergeSort: N=%d num_proc=%d max_th=%d time_avg=%lf time_stddev=%lf num_runs=%d\n",
+           n, omp_get_num_procs(), omp_get_max_threads(), average, variance, ITERATIONS_PER_SIZE);
 
     free(buff);
     free(test);
